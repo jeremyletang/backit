@@ -9,11 +9,15 @@
 #![plugin(serde_macros)]
 // #![allow(unused_attributes)]
 
+#[macro_use]
+extern crate diesel;
 extern crate dotenv;
 extern crate env_logger;
 extern crate iron;
 #[macro_use]
 extern crate log;
+extern crate r2d2;
+extern crate r2d2_diesel;
 extern crate serde;
 extern crate serde_json;
 extern crate time;

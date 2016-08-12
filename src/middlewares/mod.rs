@@ -7,3 +7,4 @@
 
 pub mod cors;
 pub mod metrics;
+pub mod sqlite;
