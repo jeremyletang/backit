@@ -5,26 +5,22 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use std::env;
 use std::sync::Arc;
 
 use diesel::sqlite::SqliteConnection;
-use dotenv::dotenv;
 use iron::prelude::*;
 use iron::{BeforeMiddleware, typemap};
 use r2d2_diesel::ConnectionManager;
 use r2d2;
+use std::convert::Into;
 
 pub struct SqliteConnectionMid {
     pool: Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>>,
 }
 
 impl SqliteConnectionMid {
-    pub fn new() -> SqliteConnectionMid {
-        dotenv().ok();
-
-        let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-
+    pub fn new<S>(database_url: S) -> SqliteConnectionMid where S: Into<String> {
+        let database_url: String = database_url.into();
         let config = r2d2::Config::default();
         let manager = ConnectionManager::<SqliteConnection>::new(&*database_url);
         let pool = r2d2::Pool::new(config, manager)
