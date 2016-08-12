@@ -11,7 +11,7 @@ use iron::status::Status;
 use json::Error;
 use std::convert::Into;
 
-pub fn ok<S>(status: Status, res: S)
+pub fn new<S>(status: Status, res: S)
     -> IronResult<IronResponse> where S: Into<String> {
     let r: String = res.into();
     Ok(IronResponse::with((status, r)))
@@ -19,6 +19,12 @@ pub fn ok<S>(status: Status, res: S)
 
 pub fn no_content() -> IronResult<IronResponse> {
     Ok(IronResponse::with((Status::NoContent, "")))
+}
+
+pub fn ok<S>(res: S)
+    -> IronResult<IronResponse> where S: Into<String> {
+    let r: String = res.into();
+    Ok(IronResponse::with((Status::Ok, r)))
 }
 
 pub fn bad_request<S>(err: S)
