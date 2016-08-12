@@ -7,11 +7,10 @@
 
 #![feature(custom_derive, plugin)]
 #![plugin(serde_macros)]
+#![allow(unused_attributes)]
 
 #[macro_use]
 extern crate diesel;
-extern crate dotenv;
-extern crate env_logger;
 extern crate iron;
 #[macro_use]
 extern crate log;
