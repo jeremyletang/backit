@@ -15,12 +15,12 @@ use iron::{BeforeMiddleware, typemap};
 use r2d2_diesel::ConnectionManager;
 use r2d2;
 
-pub struct SqliteConnectionMiddleware {
+pub struct SqliteConnectionMid {
     pool: Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>>,
 }
 
-impl SqliteConnectionMiddleware {
-    pub fn new() -> SqliteConnectionMiddleware {
+impl SqliteConnectionMid {
+    pub fn new() -> SqliteConnectionMid {
         dotenv().ok();
 
         let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -29,19 +29,19 @@ impl SqliteConnectionMiddleware {
         let manager = ConnectionManager::<SqliteConnection>::new(&*database_url);
         let pool = r2d2::Pool::new(config, manager)
             .expect(&format!("Error connecting to {}", database_url));
-        SqliteConnectionMiddleware { pool: Arc::new(pool) }
+        SqliteConnectionMid { pool: Arc::new(pool) }
     }
 }
 
 
-impl typemap::Key for SqliteConnectionMiddleware {
+impl typemap::Key for SqliteConnectionMid {
     type Value = Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>>;
 }
 
-impl BeforeMiddleware for SqliteConnectionMiddleware {
+impl BeforeMiddleware for SqliteConnectionMid {
     fn before(&self, req: &mut Request) -> IronResult<()> {
         let pool = self.pool.clone();
-        req.extensions.insert::<SqliteConnectionMiddleware>(pool);
+        req.extensions.insert::<SqliteConnectionMid>(pool);
         Ok(())
     }
 }
