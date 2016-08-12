@@ -7,7 +7,6 @@
 
 #![feature(custom_derive, plugin)]
 #![plugin(serde_macros)]
-// #![allow(unused_attributes)]
 
 #[macro_use]
 extern crate diesel;
