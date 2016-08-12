@@ -21,7 +21,7 @@ pub fn from_body<T>(body: &mut Body) -> Result<T, Error>
         Ok(_) => {}
         Err(e) => {
             let err = format!("cannot read request body {}", e);
-            return Err(Error::internal_error(&err));
+            return Err(Error::internal_error(&*err));
         }
     }
 
@@ -29,7 +29,7 @@ pub fn from_body<T>(body: &mut Body) -> Result<T, Error>
         Ok(g) => g,
         Err(_) => {
             let err = format!("expected type: {}", serde_json::to_string(&T::default()).ok().unwrap());
-            return Err(Error::bad_request(&err));
+            return Err(Error::bad_request(&*err));
         }
     };
 

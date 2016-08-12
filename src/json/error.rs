@@ -29,7 +29,7 @@ pub struct Error {
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str(&*self.to_json())
+        f.write_str(&*self.as_json())
     }
 }
 
@@ -44,40 +44,34 @@ impl StdError for Error {
 }
 
 impl Error {
-    pub fn bad_request(message: &str) -> Error {
+    pub fn new<S>(status: Status, message: S) -> Error where S: Into<String> {
         Error {
-            status: StatusWrapper(Status::BadRequest),
-            message: message.to_string(),
+            status: StatusWrapper(status),
+            message: message.into(),
         }
     }
-
-    pub fn internal_error(message: &str) -> Error {
-        Error {
-            status: StatusWrapper(Status::InternalServerError),
-            message: message.to_string(),
-        }
+    pub fn bad_request<S>(message: S) -> Error where S: Into<String> {
+        Error::new(Status::BadRequest, message)
     }
 
-    pub fn not_found(message: &str) -> Error {
-        Error {
-            status: StatusWrapper(Status::NotFound),
-            message: message.to_string(),
-        }
+    pub fn internal_error<S>(message: S) -> Error where S: Into<String> {
+        Error::new(Status::InternalServerError, message)
     }
 
-    pub fn unauthorized(message: &str) -> Error {
-        Error {
-            status: StatusWrapper(Status::Unauthorized),
-            message: message.to_string(),
-        }
+    pub fn not_found<S>(message: S) -> Error where S: Into<String> {
+        Error::new(Status::NotFound, message)
     }
 
-    pub fn code(&self) -> Status {
+    pub fn unauthorized<S>(message: S) -> Error where S: Into<String> {
+        Error::new(Status::Unauthorized, message)
+    }
+
+    pub fn status(&self) -> Status {
         let StatusWrapper(c) = self.status;
         return c;
     }
 
-    pub fn to_json(&self) -> String {
+    pub fn as_json(&self) -> String {
         serde_json::to_string(self).unwrap()
     }
 }
