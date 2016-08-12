@@ -6,12 +6,13 @@
 // except according to those terms.
 
 use iron::request::Body;
-use self::error::Error;
 use serde::{Serialize, Deserialize};
 use serde_json;
 use std::io::Read;
 
-pub mod error;
+pub use self::error::Error;
+
+mod error;
 
 pub fn from_body<T>(body: &mut Body) -> Result<T, Error>
     where T: Serialize + Deserialize + Default

@@ -5,6 +5,10 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-pub mod cors;
-pub mod metrics;
-pub mod sqlite;
+pub use self::cors::CorsMid;
+pub use self::metrics::MetricsMid;
+pub use self::sqlite::SqliteConnectionMid;
+
+mod cors;
+mod metrics;
+mod sqlite;

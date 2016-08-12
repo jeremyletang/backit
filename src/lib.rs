@@ -25,3 +25,4 @@ extern crate unicase;
 pub mod middlewares;
 pub mod json;
 pub mod macros;
+pub mod responses;
