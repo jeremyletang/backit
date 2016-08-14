@@ -8,7 +8,7 @@
 use std::sync::Arc;
 
 use diesel::sqlite::SqliteConnection;
-use iron::prelude::*;
+use iron::{Request, IronResult};
 use iron::{BeforeMiddleware, typemap};
 use r2d2_diesel::ConnectionManager;
 use r2d2;
@@ -29,7 +29,6 @@ impl SqliteConnectionMid {
     }
 }
 
-
 impl typemap::Key for SqliteConnectionMid {
     type Value = Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>>;
 }
@@ -40,4 +39,12 @@ impl BeforeMiddleware for SqliteConnectionMid {
         req.extensions.insert::<SqliteConnectionMid>(pool);
         Ok(())
     }
+}
+
+pub fn extract_connection_from_request(req: &mut Request)
+                                       -> Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>> {
+    let pool = req.extensions
+        .get::<SqliteConnectionMid>()
+        .expect("cannot get database connection pool from context");
+    pool.clone()
 }

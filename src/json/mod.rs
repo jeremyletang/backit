@@ -5,7 +5,6 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-use iron::request::Body;
 use serde::{Serialize, Deserialize};
 use serde_json;
 use std::io::Read;
@@ -14,8 +13,9 @@ pub use self::error::Error;
 
 mod error;
 
-pub fn from_body<T>(body: &mut Body) -> Result<T, Error>
-    where T: Serialize + Deserialize + Default
+pub fn from_body<T, B>(body: &mut B) -> Result<T, Error>
+    where T: Serialize + Deserialize + Default,
+          B: Read
 {
     let mut s = String::new();
     match body.read_to_string(&mut s) {
@@ -29,7 +29,7 @@ pub fn from_body<T>(body: &mut Body) -> Result<T, Error>
     let t: T = match serde_json::from_str(&s) {
         Ok(g) => g,
         Err(_) => {
-            let err = format!("expected type: {}", serde_json::to_string(&T::default()).ok().unwrap());
+            let err = format!("expected type: {}, found {}", serde_json::to_string(&T::default()).ok().unwrap(), &s);
             return Err(Error::bad_request(&*err));
         }
     };

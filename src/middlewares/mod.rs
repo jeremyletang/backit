@@ -7,7 +7,7 @@
 
 pub use self::cors::CorsMid;
 pub use self::metrics::MetricsMid;
-pub use self::sqlite::SqliteConnectionMid;
+pub use self::sqlite::{SqliteConnectionMid, extract_connection_from_request};
 
 mod cors;
 mod metrics;
