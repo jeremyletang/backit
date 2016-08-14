@@ -18,10 +18,11 @@ extern crate r2d2;
 extern crate r2d2_diesel;
 extern crate serde;
 extern crate serde_json;
-extern crate time;
+extern crate time as std_time;
 extern crate unicase;
 
 pub mod middlewares;
 pub mod json;
 pub mod macros;
 pub mod responses;
+pub mod time;

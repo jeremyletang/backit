@@ -10,7 +10,7 @@ macro_rules! try_or_json_error {
     ($expr:expr) => (match $expr {
         ::std::result::Result::Ok(val) => val,
         ::std::result::Result::Err(err) => {
-            return ::std::result::Result::Ok(::iron::Response::with((err.code(), err.as_json())))
+            return ::std::result::Result::Ok(::iron::Response::with((err.status(), err.as_json())))
         }
     })
 }

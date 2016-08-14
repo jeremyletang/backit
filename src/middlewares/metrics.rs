@@ -6,7 +6,7 @@
 // except according to those terms.
 
 use iron::prelude::*;
-use time::precise_time_ns;
+use std_time::precise_time_ns;
 use iron::{AfterMiddleware, BeforeMiddleware, typemap};
 
 pub struct MetricsMid;
