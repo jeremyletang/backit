@@ -6,14 +6,14 @@ authors = ["jeremyletang <letang.jeremy@gmail.com>"]
 [dependencies]
 #diesel = { version = "0.7.1", default-features = false, features = ["sqlite"] }
 #diesel_codegen = { version = "0.7.1", default-features = false, features = ["sqlite"] }
-diesel = { git = "https://github.com/jeremyletang/diesel", default-features = false, features = ["sqlite"] }
-diesel_codegen = { git = "https://github.com/jeremyletang/diesel", default-features = false, features = ["sqlite"] }
+diesel = { git = "https://github.com/jeremyletang/diesel", default-features = false, features = ["sqlite", "postgres"] }
+diesel_codegen = { git = "https://github.com/jeremyletang/diesel", default-features = false, features = ["sqlite", "postgres"] }
 iron = "0.4.0"
 log = "0.3.6"
 r2d2 = "0.7.0"
 r2d2-diesel = { git = "https://github.com/jeremyletang/r2d2-diesel" }
-serde = "0.8.0"
-serde_json = "0.8.0"
-serde_macros = "0.8.2"
+serde = "^0.8"
+serde_json = "^0.8"
+serde_macros = "^0.8"
 time = "0.1.35"
 unicase = "1.4.0"

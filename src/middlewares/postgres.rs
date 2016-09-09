@@ -7,44 +7,45 @@
 
 use std::sync::Arc;
 
-use diesel::sqlite::SqliteConnection;
+use diesel::pg::PgConnection;
 use iron::{Request, IronResult};
 use iron::{BeforeMiddleware, typemap};
 use r2d2_diesel::ConnectionManager;
 use r2d2;
 use std::convert::Into;
 
-pub struct SqliteConnectionMid {
-    pool: Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>>,
+pub struct PostgresConnectionMid {
+    pool: Arc<r2d2::Pool<ConnectionManager<PgConnection>>>,
 }
 
-impl SqliteConnectionMid {
-    pub fn new<S>(database_url: S) -> SqliteConnectionMid where S: Into<String> {
+impl PostgresConnectionMid {
+    pub fn new<S>(database_url: S) -> PostgresConnectionMid where S: Into<String> {
         let database_url: String = database_url.into();
         let config = r2d2::Config::default();
-        let manager = ConnectionManager::<SqliteConnection>::new(&*database_url);
+        let manager = ConnectionManager::<PgConnection>::new(&*database_url);
         let pool = r2d2::Pool::new(config, manager)
             .expect(&format!("Error connecting to {}", database_url));
-        SqliteConnectionMid { pool: Arc::new(pool) }
+        PostgresConnectionMid { pool: Arc::new(pool) }
     }
 }
 
-impl typemap::Key for SqliteConnectionMid {
-    type Value = Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>>;
+impl typemap::Key for PostgresConnectionMid {
+    type Value = Arc<r2d2::Pool<ConnectionManager<PgConnection>>>;
 }
 
-impl BeforeMiddleware for SqliteConnectionMid {
+impl BeforeMiddleware for PostgresConnectionMid {
     fn before(&self, req: &mut Request) -> IronResult<()> {
         let pool = self.pool.clone();
-        req.extensions.insert::<SqliteConnectionMid>(pool);
+        req.extensions.insert::<PostgresConnectionMid>(pool);
         Ok(())
     }
 }
 
-pub fn extract_sqlite_from_request(req: &mut Request)
-                                       -> Arc<r2d2::Pool<ConnectionManager<SqliteConnection>>> {
+pub fn extract_postgres_from_request(req: &mut Request)
+                                     -> Arc<r2d2::Pool<ConnectionManager<PgConnection>>> {
     let pool = req.extensions
-        .get::<SqliteConnectionMid>()
+        .get::<PostgresConnectionMid>()
         .expect("cannot get database connection pool from context");
     pool.clone()
 }
+
