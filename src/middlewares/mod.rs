@@ -7,10 +7,14 @@
 
 pub use self::cors::CorsMid;
 pub use self::metrics::MetricsMid;
+#[cfg(feature = "sqlite")]
 pub use self::sqlite::{SqliteConnectionMid, extract_sqlite_from_request};
+#[cfg(feature = "postgres")]
 pub use self::postgres::{PostgresConnectionMid, extract_postgres_from_request};
 
 mod cors;
 mod metrics;
+#[cfg(feature = "postgres")]
 mod postgres;
+#[cfg(feature = "sqlite")]
 mod sqlite;
