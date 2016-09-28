@@ -21,7 +21,9 @@ pub struct PostgresConnectionMid {
 impl PostgresConnectionMid {
     pub fn new<S>(database_url: S) -> PostgresConnectionMid where S: Into<String> {
         let database_url: String = database_url.into();
-        let config = r2d2::Config::default();
+        let config = r2d2::Config::builder()
+            .pool_size(5)
+            .build();
         let manager = ConnectionManager::<PgConnection>::new(&*database_url);
         let pool = r2d2::Pool::new(config, manager)
             .expect(&format!("Error connecting to {}", database_url));
